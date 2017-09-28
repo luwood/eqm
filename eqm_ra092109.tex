@@ -40,9 +40,12 @@
 \section{Related Work}
 \label{sec:related}
 
-Wait-free data structures are the foundations of this work. They designate objects that are shared by concurrent processes and guarantee that each process will complete an operation in a finite number of steps. The later condition assures that, despite of failures, all processes will make progress. In other words, a starvation scenario is impossible. 
+Non-blocking data structures are the foundations of this work. They designate objects that are shared by concurrent processes and guarantee the global progression of the system. More precisely, they  assure that some process will complete an operation in a finite number of steps, regardless of the relative speed of others; one process will never block the other, even if it fails or is slow. Note that this  property cannot be achieved by assuring that a single process at a time manipulates the object: the current owner of the critical section might halt, leaving all others waiting. 
 
-These structures have been widely studied in the last decades, since they are the heart of many important problems in the concurrent programming area \cite{herlihy2011art}.
+These structures have been widely studied in the last decades, since they are the heart of many important problems in the concurrent	 programming area \cite{herlihy2011art}.
+
+
+
 The name "wait-free" may give the impression that such implementations are faster than its blocking counterparts. However, this notion is misleading.  Such algorithms can be complex and inefficient \cite{attiya1994wait}.  
 
 In 1991, Maurice Herlihy showed a fundamental result that provided a technique to prove if a given wait-free implementation was possible or not \cite{herlihy1991wait}. This work also proved the existence of universal primitives, such as \textit{Compare and Swap}, that could be used to construct any sequential wait-free structure. 
