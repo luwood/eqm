@@ -35,27 +35,67 @@
 \footskip 2.2cm
 
 \section{Introduction}
-One of the critical aspects of implementing total order broadcast (TOB) is how concurrency is handled. Simultaneous events are in the very nature of such algorithms; they need to receive and transmit messages, handle internal interruptions, and deal with data persistence. Usually those asynchronous concurrent parts are organized by several threads that share data. The access to those mutual structures must be done carefully by taking into consideration the possibility of parallel writes. If a strict discipline is not followed, an incorrect and undesirable state might be produced. 
+One of the critical aspects of implementing total order broadcast (TOB) is how 
+concurrency is handled. Simultaneous events are in the very nature of such 
+algorithms; they need to receive and transmit messages, handle internal 
+interruptions, and deal with data persistence. Usually those asynchronous 
+concurrent parts are organized by several threads that share data. The access to 
+those mutual structures must be done carefully by taking into consideration the 
+possibility of parallel writes. If a strict discipline is not followed, an 
+incorrect and undesirable state might be produced. 
 
-The primary mechanism used in those scenarios is exclusive locking; also called busy waiting, conditional waiting or critical sections. Unfortunately, any locking-based synchronization technique can lead  to arbitrary delays: if the critical section owner is slow, then all others will be too. This is a very undesirable effect to a TOB implementation. 
+The primary mechanism used in those scenarios is exclusive locking; also called 
+busy waiting, conditional waiting or critical sections. Unfortunately, any 
+locking-based synchronization technique can lead  to arbitrary delays: if the 
+critical section owner is slow, then all others will be too. This is a very 
+undesirable effect to a TOB implementation. 
 
-To try to circumvent the problem Lamport introduced in 1977 the first algorithms for concurrent reading and writing without the use of locks \cite{lamport77b}. The idea was later developed by Herlihy into a body of mechanisms that support lock-freedom and wait-freedom \cite{herlihy1990methodology}. Wait-freedom guarantees that any process that access a shared concurrent  object will complete its operation in a finite number of steps, regardless  the execution speed of the other processes. In contrast, lock-freedom is weaker and only assures that \textit{some} process will terminate in a finite number of step. The first implies that a thread will make progress despite of some being very or even completely stopped; the later implies that the system with make progress. 
+To try to circumvent the problem Lamport introduced in 1977 the first algorithms 
+for concurrent reading and writing without the use of locks \cite{lamport77b}. 
+The idea was later developed by Herlihy into a body of mechanisms that support 
+lock-freedom and wait-freedom \cite{herlihy1990methodology}. Wait-freedom 
+guarantees that any process that access a shared concurrent  object will 
+complete its operation in a finite number of steps, regardless  the execution 
+speed of the other processes. In contrast, lock-freedom is weaker and only 
+assures that \textit{some} process will terminate in a finite number of step. 
+The first implies that a thread will make progress despite of some being very or 
+even completely stopped; the later implies that the system with make progress. 
 
-Wait-freedom is a very  desirable property when one has to cope with threads  that encounter unexpected delays; this  is the case
+Wait-freedom is a very  desirable property when one has to cope with threads  
+that encounter unexpected delays; this  is the case
 of  most  implementations of  consensus-based  TOBs. 
 
-So, during  our research   we  are   going   to   transform  a   synchronization-based impelementation  of  Treplica \cite{vieira2008}   into  an  functionally equivalent  wait-free   Treplica.   The  performance of the two is going to be compared using micro benchmarks to assess the contribution  of wait-freedom to the  performance of active replication.
+So, during  our research   we  are   going   to   transform  a   
+synchronization-based impelementation  of  Treplica \cite{vieira2008}   into  an 
+ functionally equivalent  wait-free   Treplica.   The  performance of the two is 
+going to be compared using micro benchmarks to assess the contribution  of 
+wait-freedom to the  performance of active replication.
 
 \section{Related Work}
 \label{sec:related}
 
-Non-blocking data structures are the foundations of this work. They designate objects that are shared by concurrent processes and guarantee the global progression of the system. More precisely, they  assure that some process will complete an operation in a finite number of steps, regardless of the relative speed of others; one process will never block the other, even if it fails or is slow. Note that this  property cannot be achieved by assuring that a single process at a time manipulates the object: the current owner of the critical section might halt, leaving all others waiting. 
+Non-blocking data structures are the foundations of this work. They designate 
+objects that are shared by concurrent processes and guarantee the global 
+progression of the system. More precisely, they  assure that some process will 
+complete an operation in a finite number of steps, regardless of the relative 
+speed of others; one process will never block the other, even if it fails or is 
+slow. Note that this  property cannot be achieved by assuring that a single 
+process at a time manipulates the object: the current owner of the critical 
+section might halt, leaving all others waiting. 
 
-These structures have been widely studied in the last decades, since they are the heart of many important problems in the concurrent	 programming area \cite{herlihy2011art}.
+These structures have been widely studied in the last decades, since they are 
+the heart of many important problems in the concurrent	 programming area 
+\cite{herlihy2011art}.
 
-The name "wait-free" may give the impression that such implementations are faster than its blocking counterparts. However, this notion is misleading.  Such algorithms can be complex and inefficient \cite{attiya1994wait}.  
+The name "wait-free" may give the impression that such implementations are 
+faster than its blocking counterparts. However, this notion is misleading.  Such 
+algorithms can be complex and inefficient \cite{attiya1994wait}.  
 
-Java provides a wait-free queue called \textit{ConcurrentLinkedQueue} that is based on a work by Michael and Scott \cite{michael1996simple}. This implementation was very promising because it showed the best performance in comparison to other blocking and non-blocking counterparts in the preliminary results presented by the authors. 
+Java provides a wait-free queue called \textit{ConcurrentLinkedQueue} that is 
+based on a work by Michael and Scott \cite{michael1996simple}. This 
+implementation was very promising because it showed the best performance in 
+comparison to other blocking and non-blocking counterparts in the preliminary 
+results presented by the authors. 
 
 
 \section{Expected Contribution}
@@ -73,3 +113,4 @@ Java provides a wait-free queue called \textit{ConcurrentLinkedQueue} that is ba
 \bibliographystyle{acm}
 
 \end{document}
+
