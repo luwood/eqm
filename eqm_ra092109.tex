@@ -12,7 +12,7 @@
 \vskip 15mm
 
 \begin{center}
-\textbf{Treplica wait-free implementation}
+\textbf{Nonblocking Treplica}
 \end{center}
 
 \vskip 5mm
@@ -65,15 +65,19 @@ Wait-freedom is a very  desirable property when one has to cope with threads
 that encounter unexpected delays; this  is the case
 of  most  implementations of  consensus-based  TOBs.
 
-So, during  our research   we  are   going   to   transform  a
-synchronization-based impelementation  of  Treplica \cite{vieira2008}   into  a
- functionally equivalent  wait-free   Treplica.   The  performance of the two will be compared using micro benchmarks to assess the contribution  of
-wait-freedom to the  performance of active replication.
+Treplica \cite{vieira2008} is a tool that provides TOB through Fast-Paxos
+\cite{Lamport2006}. It handles concurrency by using the traditional
+synchronization mechanisms: locks. During our research we are going to transform
+its current implementation  into a functionally equivalent lock-free version.
+The  performance of the two will be compared using micro benchmarks to assess
+the contribution  of nonblocking mechanisms to the  performance of active
+replication.
+
 
 \section{Related Work}
 \label{sec:related}
 
-Non-blocking data structures are the foundations of this work. They designate
+Nonblocking data structures are the foundations of this work. They designate
 objects that are shared by concurrent processes and guarantee the global
 progression of the system. More precisely, they  assure that some process will
 complete an operation in a finite number of steps, regardless of the relative
@@ -93,7 +97,7 @@ algorithms can be complex and inefficient \cite{attiya1994wait}.
 Java provides a wait-free queue called \textit{ConcurrentLinkedQueue} that is
 based on a work by Michael and Scott \cite{michael1996simple}. This
 implementation was very promising because it showed the best performance in
-comparison to other blocking and non-blocking counterparts in the preliminary
+comparison to other blocking and nonblocking counterparts in the preliminary
 results presented by the authors.
 
 
