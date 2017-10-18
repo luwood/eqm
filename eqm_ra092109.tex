@@ -1,38 +1,98 @@
-\documentclass[12pt,twoside,a4paper]{article}
-\usepackage[brazil,english]{babel}
+\nonstopmode
+
+\documentclass[12pt]{article}
+
+\usepackage{longtable}
+\usepackage{colortbl}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{timbre-ic}
-\usepackage{booktabs}
-\usepackage[table]{xcolor}
-\usepackage{url}
+
+% ugly workaround to make longtable, colortbl and \hline\hline work
+
+\makeatletter
+\AtBeginDocument{
+  \ifx\longtable\@undefined\else
+    \def\LT@@hline{%
+      \ifx\@let@token\hline
+        \global\let\@let@token\@gobble
+        \ifx\CT@drsc@\relax
+          \gdef\CT@LT@sep{%
+            \noalign{\penalty-\@medpenalty\vskip\doublerulesep}}%
+        \else
+          \gdef\CT@LT@sep{%
+            \multispan\LT@cols{%
+              \CT@drsc@\leaders\hrule\@height\doublerulesep\hfill}\cr}%
+        \fi
+      \else
+        \global\let\@let@token\@empty
+        \gdef\CT@LT@sep{%
+          \noalign{\penalty-\@lowpenalty\vskip-\arrayrulewidth}}%
+      \fi
+      \ifnum0=`{\fi}%
+      \multispan\LT@cols
+       {\CT@arc@\leaders\hrule\@height\arrayrulewidth\hfill}\cr
+      \CT@LT@sep
+      \multispan\LT@cols
+       {\CT@arc@\leaders\hrule\@height\arrayrulewidth\hfill}\cr
+      \noalign{\penalty\@M}%
+      \@let@token}
+    \fi}
+\makeatother
+
+\usepackage{array}
+\usepackage{booktabs}       % for \toprule, \midrule and \bottomrule
+\usepackage{enumerate}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{graphicx}
+%\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{pdflscape}
+\usepackage{pgfplotstable}  % generates table from .csv
+\usepackage{subfig}
+\usepackage{textcomp}
+\usepackage[flushleft]{threeparttable}
+\usepackage{titling}
+
+\pgfplotsset{compat=1.11}
+
+% add some space after table caption
+\captionsetup[table]{aboveskip=10pt}
+\captionsetup[table]{belowskip=10pt}
+
+% good looking tilde
+\newcommand{\mytilde}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}
+
+% bring title up
+\renewcommand\maketitlehooka{\null\mbox{}\vfill\vspace{-8cm}}
+\renewcommand\maketitlehookd{\vfill\null}
+
+\title{
+    Nonblocking Treplica\\
+    (Master Qualification Exam)}
+
+\date{2017-10-18}
+
+\author{
+    Luísa Madeira Cardoso\\
+    Advisor: Luis Eduardo Buzato\\
+    Institute of Computing\\
+    University of Campinas}
 
 \begin{document}
 
-\vskip 15mm
+\pagenumbering{gobble}
 
-\begin{center}
-\textbf{Nonblocking Treplica}
-\end{center}
+\begin{titlingpage}
+\maketitle
+\end{titlingpage}
 
-\vskip 5mm
-
-\textbf{Orientando:} Luísa Madeira Cardoso
-
-\textbf{Orientador:} Luiz Eduardo Buzato
-
-\vskip 20mm
-
-\begin{abstract}
-
-\end{abstract}
-
-% resetando configs de layout
 \newpage
-\pagestyle{plain}
-\headheight 0.0cm
-\headsep 0.0cm
-\footskip 2.2cm
+\pagenumbering{arabic}
+\setcounter{page}{2}
+
+\abstract{
+
+}
+
 
 \section{Introduction}
 One of the critical aspects of implementing total order broadcast (TOB) is how
