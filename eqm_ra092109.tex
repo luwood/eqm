@@ -139,20 +139,17 @@ replication.
 \subsection{Treplica}
 Treplica is a distributed replication tool written by Vieira and others \cite{vieira2008}. It can be used to help an external application provide fault-tolerant services through Lamport's well-known \textit{active replication} model \cite{Lamport1978}. The principle presents a way to create a perfect mirror of a single program and its state. The idea is simple: consider a deterministic state machine and a copy of it; if the same sequence of actions is performed on each, then they will end on the exact same state. Thus, a replicated state machine can be safely replaced by a replica -- yielding system-wide availability.
 
-A key concept in state machine replication is event \textit{order}. In the distributed computing scenario it means assuring that messages are received in the same sequence in every machine composing the cluster. This abstraction is called total order broadcast or, sometimes, atomic broadcast. It assures the following properties:
+A key concept in state machine replication is event \textit{order}. In the distributed computing scenario it means assuring that messages are received in the same sequence in every machine composing the cluster. This abstraction is called total order broadcast or, sometimes, atomic broadcast. It assures the following properties \cite{cachin2011}
 
 \begin{itemize}
-\item Validity: If a correct process p broadcasts a message m,then p eventually delivers m.
+\item Validity: If a correct process $p$ broadcasts a message $m$, then $p$ eventually delivers $m$.
 \item No duplication: No message is delivered more than once.
-\item No creation: If a process delivers a message m with sender s,then m was previously broadcast by process s.
-\item Agreement: If a messagemis delivered by some correct process, thenmis eventually delivered by every correct process.
-\item Total order: Letm1 and m2 be any two messages and suppose p and q are any two correct processes that deliverm1 andm2.If p deliversm1 beforem2,then q deliversm1 beforem2.
+\item No creation: If a process delivers a message $m$ with sender $s$, then $m$ was previously broadcast by process $s$.
+\item Agreement: If a message $m$ is delivered by some correct process, then $m$ is eventually delivered by every correct process.
+\item Total order: Let $m_1$ and $m_2$ be any two messages and suppose p and q are any two correct processes that deliver $m_1$ and $m_2$. If p delivers $m_1$ before $m_2$, then $q$ delivers $m_1$ before $m_2$.
 \end{itemize}
 
-
-
-
- It uses the fundamental principals of Lamport's \textit{active replication} \cite{Lamport1978}: consider the application a deterministic state machine; if the same sequence of actions is performed on each, then they will end on the exact same state. Therefore, the command's receiving \textit{order} is the vital part of the system. Uniform total order broadcast (TOB) is one way of assuring that. Treplica uses a consensus based approach to provide TOB: Fast-Paxos/Paxos. Through that it provides the abstraction of an asynchrounous persistent queue.
+Treplica uses a consensus based approach to provide TOB: Fast-Paxos/Paxos. Through that it provides the abstraction of an asynchrounous persistent queue.
 By considering the failure model the crash-recovery, the commands must be persistent stored (since the machines can crash and then recover). They replay the log and achieve the desired state.
 
 
