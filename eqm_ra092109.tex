@@ -137,20 +137,49 @@ replication.
 \section{Related Work}
 \label{sec:related}
 \subsection{Treplica}
-Treplica is a distributed replication tool written by Vieira and others \cite{vieira2008}. It can be used to help an external application provide fault-tolerant services through Lamport's well-known \textit{active replication} model \cite{Lamport1978}. The principle presents a way to create a perfect mirror of a single program and its state. The idea is simple: consider a deterministic state machine and a copy of it; if the same sequence of actions is performed on each, then they will end on the exact same state. Thus, a replicated state machine can be safely replaced by a replica -- yielding system-wide availability.
+Treplica is a distributed replication tool written by Vieira and others
+\cite{vieira2008}. It can be used to help an external application provide
+fault-tolerant services through Lamport's well-known \textit{active replication}
+model \cite{Lamport1978}. The principle presents a way to create a perfect
+mirror of a single program and its state. The idea is simple: consider a
+deterministic state machine and a copy of it; if the same sequence of actions is
+performed on each, then they will end on the exact same state. Thus, a
+replicated state machine can be safely replaced by a replica -- yielding
+system-wide availability.
 
-A key concept in state machine replication is event \textit{order}. In the distributed computing scenario it means assuring that messages are received in the same sequence in every machine composing the cluster. This abstraction is called total order broadcast or, sometimes, atomic broadcast. It assures the following properties \cite{cachin2011}
+A key concept in state machine replication is event \textit{order}. In the
+distributed computing scenario it means assuring that messages are received in
+the same sequence in every machine composing the cluster. This abstraction is
+called total order broadcast or, sometimes, atomic broadcast. It assures the
+following properties \cite{cachin2011}
 
 \begin{itemize}
-\item Validity: If a correct process $p$ broadcasts a message $m$, then $p$ eventually delivers $m$.
+\item Validity: If a correct process $p$ broadcasts a message $m$, then $p$
+eventually delivers $m$.
 \item No duplication: No message is delivered more than once.
-\item No creation: If a process delivers a message $m$ with sender $s$, then $m$ was previously broadcast by process $s$.
-\item Agreement: If a message $m$ is delivered by some correct process, then $m$ is eventually delivered by every correct process.
-\item Total order: Let $m_1$ and $m_2$ be any two messages and suppose p and q are any two correct processes that deliver $m_1$ and $m_2$. If p delivers $m_1$ before $m_2$, then $q$ delivers $m_1$ before $m_2$.
+\item No creation: If a process delivers a message $m$ with sender $s$, then $m$
+was previously broadcast by process $s$.
+\item Agreement: If a message $m$ is delivered by some correct process, then $m$
+is eventually delivered by every correct process.
+\item Total order: Let $m_1$ and $m_2$ be any two messages and suppose p and q
+are any two correct processes that deliver $m_1$ and $m_2$. If p delivers $m_1$
+before $m_2$, then $q$ delivers $m_1$ before $m_2$.
 \end{itemize}
 
-Treplica uses a consensus based approach to provide TOB: Fast-Paxos/Paxos. Through that it provides the abstraction of an asynchrounous persistent queue.
-By considering the failure model the crash-recovery, the commands must be persistent stored (since the machines can crash and then recover). They replay the log and achieve the desired state.
+Treplica uses a consensus based approach to provide total order broadcast. In
+fact, it implements Lamport's optimization of the famous Paxos
+\cite{lamport1998part} algorithm: Fast Paxos \cite{Lamport2006}. Internally, the
+total order broadcast is represented by an asynchronous persistent queue. Each
+enqueue action implies on a message being sent. All the processes dequeue a
+message in the same exact order.
+
+The failure model envisioned by Treplica is the \textit{crash-recovery}: a
+process might fail -- losing all the information in its memory -- and then come
+back. The system stores a log of executed actions in persistent storage. In a
+failure-recover case, it will replay the log to achieve the last state it has
+been. For performance reasons, snapshots are also taken periodically.
+
+
 
 
 \subsection{Nonblocking data structures}
